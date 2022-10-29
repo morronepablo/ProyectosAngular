@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
 
   nuevasCanciones: any[] = [];
   loading: boolean | undefined;
+  error: boolean | undefined;
+  mensajeError: string | undefined;
 
   constructor(private spotify: SpotifyService) {
     // this.http.get('https://restcountries.com/v3.1/lang/spa')
@@ -24,6 +26,7 @@ export class HomeComponent implements OnInit {
 
     // Iniciando loading anted de Cargar la data
     this.loading = true;
+    this.error = false;
 
     this.spotify.getNewReleases()
         .subscribe( (data:any) => {
@@ -33,6 +36,11 @@ export class HomeComponent implements OnInit {
             // Quitando loadin una vez este la data
             this.loading = false;
           }, 500)
+
+        }, (errorServicio) => {
+          this.loading = false;
+          this.error = true;
+          this.mensajeError = errorServicio.error.error.message;
 
         });
   }

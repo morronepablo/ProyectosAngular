@@ -23,7 +23,7 @@ export class SearchComponent implements OnInit {
     console.log(termino);
     // Iniciando loading anted de Cargar la data
     this.loading = true;
-    this.spotify.getArtista(termino)
+    this.spotify.getArtistas(termino)
         .subscribe((data:any) => {
           console.log(data);
 

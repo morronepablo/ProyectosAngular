@@ -1,24 +1,52 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
+
 
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SpotifyService {
+export class SpotifyService implements OnInit {
 
   constructor(private http: HttpClient) {
     console.log('Spotify service listo');
+      this.getSpotifyToken();
+      this.cargarStorage();
+  }
+
+  ngOnInit() {
+    this.getSpotifyToken();
 
   }
 
+  async getSpotifyToken() {
+    await this.http.get('https://spotify-token.onrender.com/spotify/584948086926499f87f7da026009c040/374009bc74ae4d3dae5cb028382a2c93').subscribe((responseData:any) => {
+      localStorage.setItem('spotifyToken', JSON.stringify(responseData));
+      return responseData;
+    });
+  }
+
+  guardarStorage() {
+    localStorage.setItem('data', JSON.stringify(this.getSpotifyToken())  );
+  }
+
+  cargarStorage() {
+    if(localStorage.getItem('spotifyToken')) {
+      const tokenStringify: any = localStorage.getItem('spotifyToken');
+      const tokenJSON = JSON.parse(tokenStringify);
+      return tokenJSON;
+    }
+  }
+
   getQuery(query: string) {
+
+    const spotifyTokenJSON = this.cargarStorage();
+    const tokenBearer = spotifyTokenJSON.access_token;
     const url = `https://api.spotify.com/v1/${ query }`;
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer BQCSWsXNvs0gx-EHOYLq8wnQAuvt3N7t4Smd8NCr2wlk1OXPV9R1s97rBJYA-L4rlsDzETZHqRQ5baRGzqknx6T9EpVkJuosdPizqKKWKxJQqA8Dgds'
+      'Authorization': `Bearer ${tokenBearer}`
     });
-
     return this.http.get(url, { headers })
   }
 

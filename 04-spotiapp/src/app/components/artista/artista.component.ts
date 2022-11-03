@@ -21,7 +21,6 @@ export class ArtistaComponent {
     // Iniciando loading anted de Cargar la data
     this.loadingArtist = true;
     this.router.params.subscribe((params: any) => {
-      console.log(params['id']);
       this.getArtista(params['id']);
       this.getTopTracks(params['id']);
     });
@@ -32,7 +31,6 @@ export class ArtistaComponent {
     this.loadingArtist = true;
     this.spotify.getArtista(id)
         .subscribe((artista:any) => {
-          console.log(artista);
           setTimeout(() => {
             this.artista = artista;
             // Quitando loadin una vez este la data
@@ -44,7 +42,6 @@ export class ArtistaComponent {
   getTopTracks(id: string) {
     this.spotify.geTopTracks(id)
         .subscribe((topTracks: any) => {
-          console.log('topTracks --->', topTracks);
           this.topTracks = topTracks;
         })
   }

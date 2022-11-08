@@ -16,6 +16,7 @@ export class RegistroComponent implements OnInit {
 
   //Traemos la instancia del modelo usuario para relacionr con el formulario
   usuario: UsuarioModel;
+  recordarme = false;
 
   constructor(private auth: AuthService,
               private router: Router) { }
@@ -40,6 +41,9 @@ export class RegistroComponent implements OnInit {
       .subscribe(resp => {
         console.log(resp);
         Swal.close();
+        if(this.recordarme) {
+          localStorage.setItem('email', this.usuario.email);
+        }
         this.router.navigateByUrl('/home');
       }, (err) => {
         console.log(err.error.error.message);

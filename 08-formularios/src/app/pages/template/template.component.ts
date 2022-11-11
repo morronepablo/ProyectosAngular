@@ -9,19 +9,29 @@ import { PaisService } from '../../services/pais.service';
 })
 export class TemplateComponent implements OnInit {
 
+  // Para colocar los campos o names por defecto
   usuario = {
-    nombre: '',
-    apellido: '',
-    correo: ''
+    nombre: 'Pablo',
+    apellido: 'Morrone',
+    correo: 'morronepablo@gmail.com',
+    pais: 'ARG',
+    genero: 'M'
   }
+
+  paises: any[] = [];
 
   constructor(private paisService: PaisService) { }
 
   ngOnInit(): void {
     this.paisService.getPaises()
       .subscribe(paises => {
-        console.log(paises);
+        this.paises = paises;
 
+        //se agrega un objeto nuevo al principio con codigo vacio para que apareza mensaje se de seleccion
+        this.paises.unshift({
+          nombre: '[ Seleccione Pais ]',
+          codigo: ''
+        })
       });
   }
 
@@ -32,9 +42,8 @@ export class TemplateComponent implements OnInit {
     if(forma.invalid) {
 
       // colocamos que los input fueron tocados (focus)
-      Object.values(forma.controls).forEach(control => control.markAsTouched())
-
-      return;
+      return Object.values(forma.controls).forEach(control => control.markAsTouched())
+      
     }
 
     console.log(forma.value);
